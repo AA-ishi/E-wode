@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>単語の意味がわかるかな？</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<!-- ユーザー名の追加 -->
+<div id="userLogin" class="center-block">
+  <label>ユーザー名：<input type="text" id="userNameInput"></label>
+  <button id="startBtn">スタート</button>
+</div>
+
+<body>
+  <!-- 応援メッセージ -->
+  <div id="topMessageArea" class="top-message"></div>
+
+  <!-- タイトル -->
+  <h1 class="center-block">単語の意味がわかるかな？</h1>
+
+  <!-- アイコン①（単語表示ボタン） -->
+  <div class="center-block">
+    <img src="CAT1.png" id="showWordBtn" alt="単語を見る" class="icon-button">
+  </div>
+
+  <!-- 単語と例文表示 -->
+  <div id="wordDisplay" class="center-block hidden"></div>
+
+  <!-- アイコン②（答え表示） -->
+  <div class="center-block hidden" id="icon2Wrapper">
+    <img src="CAT2.png" id="showAnswerBtn" alt="答えを見る" class="icon-button">
+  </div>
+
+  <!-- 和訳と品詞 -->
+  <div id="answerDisplay" class="center-block hidden"></div>
+
+  <!-- チェックボックス -->
+  <div id="checkSection" class="center-block hidden">
+    <label>
+      <input type="checkbox" id="understoodCheckbox">
+      単語の意味が理解できていたらチェック！
+    </label>
+  </div>
+
+<button id="resetBtn" class="subtle-button">進捗をリセット</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

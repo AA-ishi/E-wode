@@ -1,0 +1,86 @@
+/* 基本スタイル（すべての端末に共通） */
+body {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #fff;
+  color: #333;
+}
+
+/* 隠す要素 */
+.hidden {
+  display: none;
+}
+
+/* 中央配置ブロック */
+.center-block {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* 応援メッセージ表示エリア */
+.top-message {
+  min-height: 1em;
+  margin: 10px 0;
+  text-align: center;
+  font-size: 1.2em;
+  color: #333;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* アイコンボタン（画像） */
+.icon-button {
+  width: 120px;
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.icon-button:hover {
+  transform: scale(1.05);
+}
+
+/* 単語・例文・答え表示エリア */
+#wordDisplay,
+#answerDisplay {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+/* チェックセクション */
+#checkSection {
+  margin-top: 15px;
+  font-size: 1em;
+}
+
+/* レスポンシブ対応：スマホ */
+@media screen and (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  .icon-button {
+    width: 80px;
+  }
+  .top-message {
+    font-size: 1em;
+    padding: 8px;
+  }
+  #wordDisplay,
+  #answerDisplay {
+    font-size: 1em;
+  }
+}
+
+/* レスポンシブ対応：タブレット */
+@media screen and (min-width: 601px) and (max-width: 900px) {
+  .icon-button {
+    width: 100px;
+  }
+  .top-message {
+    font-size: 1.1em;
+  }
+}
