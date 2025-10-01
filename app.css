@@ -77,7 +77,7 @@ body {
   font-size: 1em;
 }
 
-<button id="resetBtn" class="subtle-button">進捗をリセット</button>
+<button id="resetBtn" class="subtle-button">リセット</button>
 
   <script src="script.js"></script>
 /* レスポンシブ対応：スマホ */
@@ -127,4 +127,10 @@ body {
   #checkSection {
     font-size: 1.1em;
   }
+}
+
+/* 進捗リセットボタンを右寄せ */
+#resetBtn {
+  float: right;
+  margin: 10px 0;
 }

@@ -25,7 +25,14 @@ document.getElementById("startBtn").addEventListener("click", () => {
 
 
 function initializeApp() {
-  currentUser = localStorage.getItem("currentUser");
+  window.addEventListener('DOMContentLoaded', () => {
+  const savedUser = localStorage.getItem("currentUser");
+  if (savedUser) {
+    currentUser = savedUser;
+    document.getElementById("userLogin").classList.add("hidden");
+    initializeApp();
+  }
+});
   Promise.all([loadWords(), loadMessages()]).then(() => {
     words = words.filter(word => {
       return localStorage.getItem(`${currentUser}_checked_${word.Word}`) !== '1';
