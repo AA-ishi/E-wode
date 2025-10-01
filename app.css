@@ -77,9 +77,6 @@ body {
   font-size: 1em;
 }
 
-<button id="resetBtn" class="subtle-button">リセット</button>
-
-  <script src="script.js"></script>
 /* レスポンシブ対応：スマホ */
 @media screen and (max-width: 600px) {
   body {
