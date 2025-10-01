@@ -108,20 +108,49 @@ function updateMessage() {
 
 // 音声読み上げ
 function speak(text) {
-  if ('speechSynthesis' in window) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US'; // 英語（米国）を指定
+  if (!('speechSynthesis' in window)) {
+    fallbackSpeak(text);
+    return;
+  }
 
-    // 利用可能な英語音声を選択
+  function doSpeak() {
     const voices = speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'));
+    if (!voices.length) {
+      fallbackSpeak(text);
+      return;
+    }
 
-    if (enVoice) {
-      utter.voice = enVoice;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+
+    // Google音声を優先し、なければ英語音声、さらになければ最初の音声
+    utter.voice =
+      voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
+      voices.find(v => v.lang.startsWith('en')) ||
+      voices[0];
+
+    if (!utter.voice) {
+      fallbackSpeak(text);
+      return;
     }
 
     speechSynthesis.cancel();
     speechSynthesis.speak(utter);
+  }
+
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) {
+    speechSynthesis.onvoiceschanged = () => {
+      doSpeak();
+    };
+
+    setTimeout(() => {
+      if (!speechSynthesis.getVoices().length) {
+        fallbackSpeak(text);
+      }
+    }, 5000);
+  } else {
+    doSpeak();
   }
 }
 
