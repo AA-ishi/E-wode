@@ -107,8 +107,13 @@ function updateMessage() {
     }
   }
 
+  // メッセージ表示
   topMessageArea.textContent = `${currentUser} !${selectedMessage}`;
 }
+
+  //  件数表示を更新
+  document.getElementById('checked-count').textContent = checkedCount;
+
 
 // 音声読み上げ
 function speak(text) {
