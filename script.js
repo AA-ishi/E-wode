@@ -1,6 +1,3 @@
-js
-
-
 
 var words = [];
 let messages = [];
