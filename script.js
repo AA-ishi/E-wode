@@ -1,5 +1,4 @@
-
-var words = [];
+let words = [];
 let messages = [];
 let checkedWords = [];
 let currentWord = null;
@@ -14,6 +13,7 @@ const answerDisplay = document.getElementById('answerDisplay');
 const checkSection = document.getElementById('checkSection');
 const understoodCheckbox = document.getElementById('understoodCheckbox');
 
+// ユーザー名入力
 document.getElementById("startBtn").addEventListener("click", () => {
   const input = document.getElementById("userNameInput").value.trim();
   if (input) {
@@ -24,25 +24,17 @@ document.getElementById("startBtn").addEventListener("click", () => {
   }
 });
 
-
+// 初期化処理
 function initializeApp() {
-  window.addEventListener('DOMContentLoaded', () => {
-  const savedUser = localStorage.getItem("currentUser");
-  if (savedUser) {
-    currentUser = savedUser;
-    document.getElementById("userLogin").classList.add("hidden");
-    initializeApp();
-  }
-});
   Promise.all([loadWords(), loadMessages()]).then(() => {
     words = words.filter(word => {
       return localStorage.getItem(`${currentUser}_checked_${word.Word}`) !== '1';
     });
-    updateMessage(messages[0].message);
+    updateMessage();
   });
 }
 
-// CSVを配列にパース
+// CSVパース
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   const headers = lines[0].split(',');
@@ -58,12 +50,19 @@ function parseCSV(text) {
 
 // 単語読み込み
 function loadWords() {
-  return fetch('word-data.csv') 
-    .then(res => res.text())
+  return fetch('word-data.csv')
+    .then(res => {
+      if (!res.ok) throw new Error("CSV読み込み失敗");
+      return res.text();
+    })
     .then(text => {
       const all = parseCSV(text);
       checkedWords = all.filter(w => w.Check === '1').map(w => w.Word);
       words = all.filter(w => w.Check !== '1');
+    })
+    .catch(err => {
+      console.error(err);
+      alert("単語データの読み込みに失敗しました。");
     });
 }
 
@@ -80,30 +79,20 @@ function loadMessages() {
     });
 }
 
-// 応援メッセージ更新
-function speakWordAndExample(currentWord) {
-  const utterance = new SpeechSynthesisUtterance(`${currentWord['Word']}. ${currentWord['Example Sentence']}`);
-  utterance.lang = 'en-US';
-  speechSynthesis.speak(utterance);
-}
+// 応援メッセージと進捗バー更新
 function updateMessage() {
-  const topMessageArea = document.getElementById("topMessageArea");
-
-  // チェック済み単語数を取得
   const checkedCount = Object.keys(localStorage).filter(key =>
-  key.startsWith(`${currentUser}_checked_`)
+    key.startsWith(`${currentUser}_checked_`)
   ).length;
-  
+
   const totalWords = checkedWords.length + words.length;
-  const percent = Math.floor((checkedCount / totalWords) * 100);
-  
-  // グラデーションの割合を更新
-  const topMessageArea = document.getElementById("topMessageArea");
-  topMessageArea.style.background = `linear-gradient(to right, #2196f3 ${100 - percent}%, #4caf50 ${percent}%)`;
+  let percent = 0;
+  if (totalWords > 0) {
+    percent = Math.floor((checkedCount / totalWords) * 100);
+  }
 
-  // メッセージを選ぶ（count以下で最大のもの）
-  let selectedMessage = messages[0].message; // デフォルト（count=0）
-
+  // メッセージ選択
+  let selectedMessage = messages[0]?.message ?? '';
   for (let i = messages.length - 1; i >= 0; i--) {
     if (checkedCount >= messages[i].count) {
       selectedMessage = messages[i].message;
@@ -111,58 +100,28 @@ function updateMessage() {
     }
   }
 
-  topMessageArea.textContent = `${currentUser} !${selectedMessage}`;
+  topMessageArea.textContent = `${currentUser} さん！${selectedMessage}`;
+  topMessageArea.style.background = `linear-gradient(to right, #2196f3 ${100 - percent}%, #4caf50 ${percent}%)`;
 }
 
 // 音声読み上げ
 function speak(text) {
-  if (!('speechSynthesis' in window)) {
-    fallbackSpeak(text);
-    return;
-  }
+  if (!('speechSynthesis' in window)) return;
 
-  function doSpeak() {
-    const voices = speechSynthesis.getVoices();
-    if (!voices.length) {
-      fallbackSpeak(text);
-      return;
-    }
-
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-
-    // Google音声を優先し、なければ英語音声、さらになければ最初の音声
-      utter.voice =
-      voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
-      voices.find(v => v.lang.startsWith('en')) ||
-      voices[0];
-
-    if (!utter.voice) {
-      fallbackSpeak(text);
-      return;
-    }
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-  }
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
 
   const voices = speechSynthesis.getVoices();
-  if (!voices.length) {
-    speechSynthesis.onvoiceschanged = () => {
-      doSpeak();
-    };
+  utter.voice =
+    voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
+    voices.find(v => v.lang.startsWith('en')) ||
+    voices[0];
 
-    setTimeout(() => {
-      if (!speechSynthesis.getVoices().length) {
-        fallbackSpeak(text);
-      }
-    }, 5000);
-  } else {
-    doSpeak();
-  }
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
 }
 
-// 単語表示（アイコン①）
+// 単語表示
 function showRandomWord() {
   if (words.length === 0) {
     wordDisplay.innerHTML = `<strong>すべての単語を覚えました！</strong>`;
@@ -184,10 +143,10 @@ function showRandomWord() {
   checkSection.classList.add('hidden');
   understoodCheckbox.checked = false;
 
-  speak(`${currentWord.Word}。${currentWord['Example Sentence']}`);
+  speak(`${currentWord.Word}. ${currentWord['Example Sentence']}`);
 }
 
-// 答え表示（アイコン②）
+// 答え表示
 function showAnswer() {
   if (!currentWord) return;
 
@@ -198,33 +157,21 @@ function showAnswer() {
   checkSection.classList.remove('hidden');
 }
 
-// チェックボックス変更
+// チェック処理
 understoodCheckbox.addEventListener('change', () => {
   if (understoodCheckbox.checked && currentWord) {
-    // 状態保存（localStorageに保存）
     localStorage.setItem(`${currentUser}_checked_${currentWord.Word}`, '1');
-
-    // 次回以降除外のため、更新
     checkedWords.push(currentWord.Word);
     words = words.filter(w => w.Word !== currentWord.Word);
-
     updateMessage();
   }
 });
 
-// イベント追加
+// イベント登録
 showWordBtn.addEventListener('click', showRandomWord);
 showAnswerBtn.addEventListener('click', showAnswer);
 
-// 初期化
-Promise.all([loadWords(), loadMessages()]).then(() => {
-  // localStorageのチェック適用
-  words = words.filter(word => {
-    return localStorage.getItem(`checked_${word.Word}`) !== '1';
-  });
- updateMessage(messages[0].message);
-});
-
+// 進捗リセット
 document.getElementById("resetBtn").addEventListener("click", () => {
   if (confirm(`${currentUser} さんの進捗をリセットしますか？\nこの操作は元に戻せません。`)) {
     Object.keys(localStorage).forEach(key => {
@@ -234,5 +181,15 @@ document.getElementById("resetBtn").addEventListener("click", () => {
     });
     alert("進捗をリセットしました！");
     location.reload();
+  }
+});
+
+// 自動ログイン対応
+window.addEventListener('DOMContentLoaded', () => {
+  const savedUser = localStorage.getItem("currentUser");
+  if (savedUser) {
+    currentUser = savedUser;
+    document.getElementById("userLogin").classList.add("hidden");
+    initializeApp();
   }
 });
