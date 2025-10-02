@@ -1,5 +1,5 @@
 
-bar words = [];
+var words = [];
 let messages = [];
 let checkedWords = [];
 let currentWord = null;
