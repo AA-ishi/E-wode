@@ -125,7 +125,7 @@ function speak(text) {
     utter.lang = 'en-US';
 
     // Google音声を優先し、なければ英語音声、さらになければ最初の音声
-    utter.voice =
+      utter.voice =
       voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
       voices.find(v => v.lang.startsWith('en')) ||
       voices[0];
