@@ -1,4 +1,5 @@
-var words = [];
+
+let words = [];
 let messages = [];
 let checkedWords = [];
 let currentWord = null;
@@ -107,36 +108,52 @@ function updateMessage() {
 }
 
 // 音声読み上げ
-function speak(text) { if (!('speechSynthesis' in window)) { fallbackSpeak(text); return; }
-function doSpeak() { const voices = speechSynthesis.getVoices(); if (!voices.length) { fallbackSpeak(text); return; }
-const utter = new SpeechSynthesisUtterance(text);
-utter.lang = 'en-US';
-
-// Google音声を優先し、なければ英語音声、さらになければ最初の音声
-utter.voice =
-  voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
-  voices.find(v => v.lang.startsWith('en')) ||
-  voices[0];
-
-if (!utter.voice) {
-  fallbackSpeak(text);
-  return;
-}
-
-speechSynthesis.cancel();
-speechSynthesis.speak(utter);
-}
-const voices = speechSynthesis.getVoices(); if (!voices.length) { speechSynthesis.onvoiceschanged = () => { doSpeak(); };
-setTimeout(() => {
-  if (!speechSynthesis.getVoices().length) {
+function speak(text) {
+  if (!('speechSynthesis' in window)) {
     fallbackSpeak(text);
+    return;
   }
-}, 5000);
 
+  function doSpeak() {
+    const voices = speechSynthesis.getVoices();
+    if (!voices.length) {
+      fallbackSpeak(text);
+      return;
+    }
 
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
 
+    // Google音声を優先し、なければ英語音声、さらになければ最初の音声
+    utter.voice =
+      voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
+      voices.find(v => v.lang.startsWith('en')) ||
+      voices[0];
 
-} else { doSpeak(); } }
+    if (!utter.voice) {
+      fallbackSpeak(text);
+      return;
+    }
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+  }
+
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) {
+    speechSynthesis.onvoiceschanged = () => {
+      doSpeak();
+    };
+
+    setTimeout(() => {
+      if (!speechSynthesis.getVoices().length) {
+        fallbackSpeak(text);
+      }
+    }, 5000);
+  } else {
+    doSpeak();
+  }
+}
 
 // 単語表示（アイコン①）
 function showRandomWord() {
