@@ -125,7 +125,6 @@ if (!utter.voice) {
 
 speechSynthesis.cancel();
 speechSynthesis.speak(utter);
-
 }
 const voices = speechSynthesis.getVoices(); if (!voices.length) { speechSynthesis.onvoiceschanged = () => { doSpeak(); };
 setTimeout(() => {
