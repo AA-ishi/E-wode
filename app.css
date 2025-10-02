@@ -36,18 +36,17 @@ body {
 }
 
 /* 応援メッセージ表示エリア */
-#topMessageArea {
+.top-message {
   min-height: 1em;
   margin: 10px 0;
-  padding: 10px;
   text-align: center;
-  font-weight: bold;
-  color: white;
+  font-size: 1.2em;
+  color: #333;
+  padding: 10px;
+  background-color: #9BF2E9;
   border-radius: 8px;
-  background: linear-gradient(to right, #2196f3 100%, #4caf50 0%); /* 初期はブルーのみ */
-  transition: background 0.5s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
 
 /* アイコンボタン（画像） */
 .icon-button {
@@ -94,7 +93,9 @@ body {
   }
 
   #wordDisplay,
-  #answerDisplay {
+ 
+
+ #answerDisplay {
     font-size: 1.1em;
   }
 
