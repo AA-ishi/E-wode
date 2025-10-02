@@ -1,3 +1,6 @@
+js
+
+
 
 var words = [];
 let messages = [];
@@ -191,17 +194,6 @@ function showAnswer() {
   checkSection.classList.remove('hidden');
 }
 
-// 件数表示の更新
-function updateCounts() {
-  const total = allWords.length;
-  const checked = allWords.filter(word => {
-    return localStorage.getItem(`${currentUser}_checked_${word.Word}`) === '1';
-  }).length;
-
-  document.getElementById('checked-count').textContent = checked;
-  document.getElementById('total-count').textContent = total;
-}
-
 // チェックボックス変更
 understoodCheckbox.addEventListener('change', () => {
   if (understoodCheckbox.checked && currentWord) {
@@ -213,7 +205,6 @@ understoodCheckbox.addEventListener('change', () => {
     words = words.filter(w => w.Word !== currentWord.Word);
 
     updateMessage();
-    updateCounts(); // 件数表示を更新
   }
 });
 
@@ -222,18 +213,14 @@ showWordBtn.addEventListener('click', showRandomWord);
 showAnswerBtn.addEventListener('click', showAnswer);
 
 // 初期化
-let allWords = [];
-
 Promise.all([loadWords(), loadMessages()]).then(() => {
-  allWords = [...words]; // 全単語を保持
+  // localStorageのチェック適用
   words = words.filter(word => {
-    return localStorage.getItem(`${currentUser}_checked_${word.Word}`) !== '1';
+    return localStorage.getItem(`checked_${word.Word}`) !== '1';
   });
-  updateMessage(messages[0].message);
-  updateCounts(); // 初期表示時に件数更新
+ updateMessage(messages[0].message);
 });
 
-// リセットボタン
 document.getElementById("resetBtn").addEventListener("click", () => {
   if (confirm(`${currentUser} さんの進捗をリセットしますか？\nこの操作は元に戻せません。`)) {
     Object.keys(localStorage).forEach(key => {
@@ -244,5 +231,4 @@ document.getElementById("resetBtn").addEventListener("click", () => {
     alert("進捗をリセットしました！");
     location.reload();
   }
-});
 });
