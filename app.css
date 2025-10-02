@@ -42,7 +42,7 @@ body {
   font-weight: bold;
   color: white;
   border-radius: 8px;
-  background: linear-gradient(to right, #2196f3 0%, #4caf50 0%); /* 初期はブルーのみ */
+  background: linear-gradient(to right, #4caf50 0%, #2196f3 0%); /* 初期はブルーのみ */
   transition: background 0.5s ease;
 }
 
