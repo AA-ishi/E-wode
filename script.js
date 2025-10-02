@@ -1,3 +1,4 @@
+
 let words = [];
 let messages = [];
 let checkedWords = [];
