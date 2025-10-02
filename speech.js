@@ -1,16 +1,15 @@
 
-export async function waitForVoices() {
-  return new Promise(resolve => {
-    const voices = speechSynthesis.getVoices();
-    if (voices.length > 0) {
-      resolve(voices);
-    } else {
-      speechSynthesis.onvoiceschanged = () => {
-        resolve(speechSynthesis.getVoices());
-      };
-    }
-  });
+function waitForVoices(callback) {
+  const voices = speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    callback(voices);
+  } else {
+    speechSynthesis.onvoiceschanged = () => {
+      callback(speechSynthesis.getVoices());
+    };
+  }
 }
+
 
 export async function speak(text) {
   if (!('speechSynthesis' in window)) return;
