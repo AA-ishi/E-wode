@@ -1,6 +1,3 @@
-/* ビューポート設定（HTML側に追加） */
-/* <meta name="viewport" content="width=device-width, initial-scale=1.0"> */
-
 /* ルートフォントサイズ（端末に応じて調整） */
 html {
   font-size: 16px;
@@ -46,7 +43,7 @@ body {
   font-size: 1.2em;
   color: #333;
   padding: 10px;
-  background-color: #00FFFF;
+  background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -77,6 +74,9 @@ body {
   font-size: 1em;
 }
 
+<button id="resetBtn" class="subtle-button">リセット</button>
+
+  <script src="script.js"></script>
 /* レスポンシブ対応：スマホ */
 @media screen and (max-width: 600px) {
   body {
@@ -94,7 +94,7 @@ body {
 
   #wordDisplay,
   #answerDisplay {
-    font-size: 1.5em;
+    font-size: 1.1em;
   }
 
   #checkSection {
