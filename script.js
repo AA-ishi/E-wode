@@ -1,4 +1,3 @@
-
 var words = [];
 let messages = [];
 let checkedWords = [];
