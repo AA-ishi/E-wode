@@ -91,8 +91,15 @@ function updateMessage() {
 
   // チェック済み単語数を取得
   const checkedCount = Object.keys(localStorage).filter(key =>
-    key.startsWith(`${currentUser}_checked_`)
+  key.startsWith(`${currentUser}_checked_`)
   ).length;
+  
+  const totalWords = checkedWords.length + words.length;
+  const percent = Math.floor((checkedCount / totalWords) * 100);
+  
+  // グラデーションの割合を更新
+  const topMessageArea = document.getElementById("topMessageArea");
+  topMessageArea.style.background = `linear-gradient(to right, #2196f3 ${100 - percent}%, #4caf50 ${percent}%)`;
 
   // メッセージを選ぶ（count以下で最大のもの）
   let selectedMessage = messages[0].message; // デフォルト（count=0）
