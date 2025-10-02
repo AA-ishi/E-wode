@@ -106,10 +106,13 @@ function updateMessage() {
 
   // メッセージ表示
   topMessageArea.textContent = `${currentUser} !${selectedMessage}`;
-}
 
-  //  件数表示を更新
-  document.getElementById('checked-count').textContent = checkedCount;
+  // ✅ 件数表示を更新（ここに移動！）
+  const countSpan = document.getElementById('checked-count');
+  if (countSpan) {
+    countSpan.textContent = checkedCount;
+  }
+}
 
 
 // 音声読み上げ
