@@ -1,5 +1,5 @@
 
-let words = [];
+barlet words = [];
 let messages = [];
 let checkedWords = [];
 let currentWord = null;
