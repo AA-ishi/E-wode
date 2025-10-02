@@ -1,4 +1,3 @@
-import { speak, waitForVoices } from './speech.js';
 
 var words = [];
 let messages = [];
